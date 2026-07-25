@@ -1,5 +1,7 @@
 $ErrorActionPreference = "Stop"
 
+$waitForExit = $args -contains "-WaitForExit"
+
 $principal = New-Object Security.Principal.WindowsPrincipal(
     [Security.Principal.WindowsIdentity]::GetCurrent()
 )
@@ -11,7 +13,8 @@ if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administra
         Start-Process powershell.exe -Verb RunAs -WorkingDirectory $PWD -ArgumentList @(
             "-NoProfile",
             "-ExecutionPolicy", "Bypass",
-            "-File", "`"$PSCommandPath`""
+            "-File", "`"$PSCommandPath`"",
+            "-WaitForExit"
         )
     }
     else {
@@ -23,7 +26,8 @@ if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administra
         Start-Process powershell.exe -Verb RunAs -WorkingDirectory $PWD -ArgumentList @(
             "-NoProfile",
             "-ExecutionPolicy", "Bypass",
-            "-File", "`"$temp`""
+            "-File", "`"$temp`"",
+            "-WaitForExit"
         )
     }
 
@@ -121,6 +125,7 @@ try {
     Write-Host "Git:  $(git --version)"
     Write-Host "Node: $(node --version)"
     Write-Host "npm:  $(npm --version)"
+    Write-Host ""
 
     Write-Step "Cloning TF2Autobot"
 
@@ -193,15 +198,10 @@ catch {
     Write-Host "ERROR: $($_.Exception.Message)" -ForegroundColor Red
 }
 finally {
-    Write-Host ""
-
-    Write-Host "Press any key to close this window..." -ForegroundColor DarkGray
-
-    try {
-        [void][System.Console]::ReadKey($true)
-    }
-    catch {
-        Read-Host "(Press Enter)" | Out-Null
+    if ($waitForExit) {
+        Write-Host ""
+        Write-Host "Press Enter to close this window.." -ForegroundColor DarkGray
+        Read-Host
     }
 }
 
