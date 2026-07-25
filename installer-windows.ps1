@@ -188,7 +188,7 @@ try {
     Write-Host "Config guide:"
     Write-Host "https://github.com/TF2Autobot/tf2autobot/wiki/Configuring-the-bot"
     Write-Host ""
-    Write-Host "Start your bot with:" -NoNewline
+    Write-Host "Start your bot with: " -NoNewline
     Write-Host "pm2 start ecosystem.json" -ForegroundColor Cyan
 }
 catch {
@@ -200,7 +200,7 @@ catch {
 finally {
     if ($waitForExit) {
         Write-Host ""
-        Write-Host "Press Enter to close this window.." -ForegroundColor DarkGray
+        Write-Host "Press Enter to close this window..." -ForegroundColor DarkGray
         Read-Host
     }
 }
